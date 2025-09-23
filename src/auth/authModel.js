@@ -12,12 +12,12 @@ exports.findUserById = async (id) => {
     return result.rows[0];
 };
 
-exports.createUser = async (email, passwordHash, role) => {
+exports.createUser = async (email, passwordHash, role, name) => {
     const result = await pool.query(
-        `INSERT INTO users (email, password_hash, role, status)
-     VALUES ($1, $2, $3, 'pending_verification')
+        `INSERT INTO users (name, email, password_hash, role, status)
+     VALUES ($1, $2, $3, $4, 'pending_verification')
      RETURNING id, email, role, status, created_at`,
-        [email, passwordHash, role]
+        [name, email, passwordHash, role]
     );
     return result.rows[0];
 };

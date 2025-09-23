@@ -19,7 +19,7 @@ app.use(helmet());
 app.use(errorHandler);
 
 // Routes
-app.use('/api/v1', routes);
+app.use('/', routes);
 
 // Health Check Endpoint
 app.get('/health', (req, res) => {

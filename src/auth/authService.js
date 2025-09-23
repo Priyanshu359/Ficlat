@@ -1,9 +1,10 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { v4: uuidv4 } = require('uuid');
 const pool = require('../../config/db');
 const authModel = require('./authModel');
 const { ref } = require('joi');
+const crypto = require('crypto');      
+
 
 function generateAccessToken(user) {
     return jwt.sign(
@@ -17,10 +18,10 @@ function generateAccessToken(user) {
 }
 
 function generateRefreshToken() {
-    return uuidv4();
+    return crypto.randomBytes(64).toString('hex');
 }
 
-exports.register = async ({ email, password, role }) => {
+exports.register = async ({ email, password, role, name }) => {
     const existing = await authModel.findUserByEmail(email);
     if (existing) {
         const err = new Error('Email already exists');
@@ -29,7 +30,7 @@ exports.register = async ({ email, password, role }) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    return authModel.createUser(email, hashedPassword, role);
+    return authModel.createUser(email, hashedPassword, role, name);
 };
 
 exports.login = async ({ email, password }) => {
@@ -45,7 +46,9 @@ exports.login = async ({ email, password }) => {
 
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken();
-    await authModel.createSession(user.id, refreshToken, req.ip, req.headers['user-agent']);
+    
+    // +==++++ WHY WE ARE CREATING SESSION HERE +==+++
+    //await authModel.createSession(user.id, refreshToken, req.ip, req.headers['user-agent']);
 
     return { user, accessToken, refreshToken };
 };

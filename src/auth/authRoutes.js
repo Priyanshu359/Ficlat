@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const validate = require('../../middleware/validate');
+const validate = require('../../middleware/validateMiddleware');
 const authController = require('./authController');
-const { registerSchema, loginSchema } = require('./authValidation');
+const { registerSchema, loginSchema } = require('./authValidator');
 const authMiddleware = require('../../middleware/authMiddleware');
 
 // Authentication & Session Routes
@@ -18,7 +18,7 @@ router.post('/request-email-verification', authMiddleware, authController.reques
 router.get('/verify-email', authController.verifyEmail);
 
 router.get('/session/curent', authMiddleware, authController.getCurrentSession);
-router.get('/sessions', authMiddleware, authController.getAllSessions);
+router.get('/sessions', authMiddleware, authController.getAllSession);
 router.delete('/sessions/:sessionId', authMiddleware, authController.deleteSession);
 
 module.exports = router;

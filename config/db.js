@@ -1,6 +1,6 @@
 const { Pool } = require('pg');
 const { error } = require('winston');
-requires('dotenv').config();
+require('dotenv').config();
 
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
